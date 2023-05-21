@@ -1,0 +1,11 @@
+{
+  "settings_text": {
+    "diagnostics_files_to_ignore": "",
+    "import_files_to_ignore": "\n.vscode\n.luarc.json\n.git\n.gitignore\nps_scripts\\twuir_transmitter.ps1\nps_scripts\\twuir_file_handler.ps1"
+  },
+  "settings_string": {},
+  "settings_bool": {
+    "disable_autosaves": false
+  },
+  "settings_number": {}
+}
