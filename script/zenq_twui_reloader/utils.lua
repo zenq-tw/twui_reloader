@@ -98,6 +98,16 @@ function utils.has_any_extension(filepath)
 end
 
 
+---@param filepath string
+---@return boolean
+function utils.has_valid_extension(filepath)
+    local _, _, file_ext  = utils.parse_filepath(filepath)
+    if not file_ext:starts_with('.') then file_ext = '.' .. file_ext end
+    
+    return file_ext == c.XML_EXT or file_ext == c.TWUI_EXT
+end
+
+
 ---@param path string
 ---@return string path_without_ext
 function utils.remove_extension(path)
@@ -167,7 +177,7 @@ end
 
 ---@param path_without_ext string
 ---@return string? path
-function utils.try_to_determine_file_extension(path_without_ext)
+function utils.check_against_file_valid_extensions(path_without_ext)
     if utils.is_file_exist(path_without_ext .. c.XML_EXT) then
         return path_without_ext .. c.XML_EXT
     end
@@ -285,17 +295,17 @@ end
 ---@param path string
 ---@return string?
 function utils.get_path_for_processing(path)
+    if utils.is_temp_path(path) then return end
+
     path = utils.prepend_local_data_folder(path)
 
-    if not utils.has_any_extension(path) then
-        return utils.try_to_determine_file_extension(path)
+    if utils.has_valid_extension(path) then
+        return utils.is_file_exist(path) and path or nil
     end
 
-    if not utils.is_file_exist(path) or utils.is_temp_path(path) then
-        return nil
-    end
+    if utils.has_any_extension(path) then return end
 
-    return path
+    return utils.check_against_file_valid_extensions(path) 
 end
 
 

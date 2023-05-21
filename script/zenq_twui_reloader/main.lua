@@ -208,7 +208,7 @@ function LayoutReloader:_process_sub_layout(path_without_ext)
     if utils.is_temp_path(path_without_ext) then return end
 
     local local_path_without_ext = utils.prepend_local_data_folder(path_without_ext)
-    local local_path = utils.try_to_determine_file_extension(local_path_without_ext) 
+    local local_path = utils.check_against_file_valid_extensions(local_path_without_ext) 
 
     if not local_path then
         return
@@ -318,8 +318,9 @@ end
 ---@param stored_file_modification_datetime string?
 ---@param last_file_modification_datetime string
 ---@param path string
+---@param results_cache {[string]: true} | nil
 ---@return boolean
-function LayoutReloader:_is_actual_file_stored(stored_file_modification_datetime, last_file_modification_datetime, path)
+function LayoutReloader:_is_actual_file_stored(stored_file_modification_datetime, last_file_modification_datetime, path, results_cache)
     if stored_file_modification_datetime ~= last_file_modification_datetime then
         return false
     end
@@ -327,12 +328,16 @@ function LayoutReloader:_is_actual_file_stored(stored_file_modification_datetime
     if not self.recursive then
         return true
     end
+    
+    if not results_cache then
+        results_cache = {}  ---@type {[string]: true}
+    end
 
+    ---TODO: store/return "layout" to parent (avoid extra file read)?         
     local layout = utils.read_file_content(path)
-    local is_checked = {}  ---@type {[string]: true}
 
     for sub_layout_path in utils.layout_fields_iterator(layout) do
-        if self:__is_sub_layout_changed(sub_layout_path, is_checked) then
+        if self:__is_sub_layout_changed(sub_layout_path, results_cache) then
             return false
         end
     end
@@ -343,23 +348,25 @@ end
 
 ---@private
 ---@param sub_path string
----@param is_checked {[string]: true}
-function LayoutReloader:__is_sub_layout_changed(sub_path, is_checked)
-    if is_checked[sub_path] then
+---@param is_not_changed {[string]: true}
+function LayoutReloader:__is_sub_layout_changed(sub_path, is_not_changed)
+    if is_not_changed[sub_path] then
         return false
     end
 
-    if not utils.get_path_for_processing(sub_path) then
-        is_checked[sub_path] = true
+    local local_sub_path = utils.get_path_for_processing(sub_path) 
+    if not local_sub_path then
+        is_not_changed[sub_path] = true
         return false
     end
 
     if self:_is_actual_file_stored(
-        t.load_file_info(sub_path),
-        self:_get_file_modification_datetime(sub_path),
-        sub_path
+        t.load_file_info(local_sub_path),
+        self:_get_file_modification_datetime(local_sub_path),
+        local_sub_path,
+        is_not_changed
     ) then
-        is_checked[sub_path] = true
+        is_not_changed[sub_path] = true
         return false
     end
         
