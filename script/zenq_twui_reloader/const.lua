@@ -3,7 +3,7 @@ local const = {}
 
 const.MOD_STATIC_NAME  = 'zenq_layout_reloader'
 
-const.TMP_FILE_MAX_ID   = 10000
+const.TMP_FILE_MAX_ID   = 1000
 
 
 const.TMP_DIR           = 'ui/temp/'

@@ -1032,7 +1032,7 @@
 					interactive="true"
 					uniqueguid="0E8BAC85-A418-9FD5-304A85D2B643E890">
 					<component_text
-						text="&#8226; Non-local layouts are skipped&#10;&#8226; Local layouts are recursively checked&#10;&#8226; Don't close the 2 black boxes spawned (instances of [[col:orange]]cmd.exe[[/col]])&#10;&#8226; Don't remove temp files created under [[col:orange]]data/ui/temp[[/col]]&#10;&#8226; Max 10k reloads per layout type ([[col:orange]].xml[[/col]] and [[col:orange]].twui.xml[[/col]]) per game session"
+						text="&#8226; Non-local layouts are skipped&#10;&#8226; Local layouts are recursively checked&#10;&#8226; Don't close the 2 black boxes spawned (instances of [[col:orange]]cmd.exe[[/col]])&#10;&#8226; Don't remove temp files created under [[col:orange]]data/ui/temp[[/col]]&#10;&#8226; Max 1k reloads per layout type ([[col:orange]].xml[[/col]] and [[col:orange]].twui.xml[[/col]]) per game session"
 						textyoffset="50.00,20.00"
 						textxoffset="30.00,30.00"
 						fontcat_name="fe_text_brand_warhammer3"
